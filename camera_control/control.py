@@ -3,6 +3,8 @@ import time
 import cv2
 from ipcqueue import posixmq
 
+import proyect_util as util
+
 
 def init():
     cap = cv2.VideoCapture('../../prueba.MOV')
@@ -15,9 +17,8 @@ def init():
                 # log error
                 pass
             else:
-                # extern this to util class
-                # the queue should contain a message
-                queue.put(frame)
+                util.queue_util.put(queue, util.Message.Message('control_camera', 'New frame', frame, 'New frame has '
+                                                                                                      'been read'))
                 time.sleep(.5)
     finally:
         cap.release()
