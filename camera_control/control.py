@@ -18,9 +18,9 @@ def init():
                 # log error
                 pass
             else:
-                util.queue_util.put(queue, util.Message.Message('control_camera', 'New frame', frame, 'New frame has '
-                                                                                                      'been read',
-                                                                datetime.now().strftime('%Y%m%d%H%M%S')))
+                util.put(queue, util.Message('control_camera', 'New frame', frame, 'New frame has '
+                                                                                   'been read',
+                                             datetime.now().strftime('%Y%m%d%H%M%S')))
                 time.sleep(.5)
     finally:
         cap.release()
