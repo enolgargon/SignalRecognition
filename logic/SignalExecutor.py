@@ -2,14 +2,18 @@ import statistics as stats
 from threading import Thread
 
 import cv2
+from ipcqueue import posixmq
 
 import proyect_util as util
-from . import AbstractExecutor, Identificator
+from .AbstractExecutor import AbstractExecutor
+from .Identificator import Identificator
 
 
 class SignalExecutor(AbstractExecutor):
     def __init__(self, nets):
         super().__init__()
+        self.exit_queue = posixmq.Queue('/signals')
+
         self.identificators = []
         if type(nets) == 'array':
             for net in nets:
@@ -61,4 +65,8 @@ class SignalExecutor(AbstractExecutor):
 
         signal = stats.mode(result)
         if result.count(signal) > len(result) / 2:
-            print('Success')
+            util.put(self.exit_queue, util.Message('signal identificator', 'Identify new signal', signal,
+                                                   f"The threads give the result {str(result)}"
+                                                   f" so the signal with code {signal} has been recognized. "
+                                                   f"This signal has described as {Identificator.codification[signal]}",
+                                                   message.image_id))
