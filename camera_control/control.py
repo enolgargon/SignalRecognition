@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 
 import cv2
 from ipcqueue import posixmq
@@ -18,7 +19,8 @@ def init():
                 pass
             else:
                 util.queue_util.put(queue, util.Message.Message('control_camera', 'New frame', frame, 'New frame has '
-                                                                                                      'been read'))
+                                                                                                      'been read',
+                                                                datetime.now().strftime('%Y%m%d%H%M%S')))
                 time.sleep(.5)
     finally:
         cap.release()
