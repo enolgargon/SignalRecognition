@@ -24,7 +24,8 @@ class SignalExecutor(AbstractExecutor):
         gauss = cv2.GaussianBlur(color, (9, 9), 0)
         canny = cv2.Canny(gauss, 10, 250)
         util.queue_util.put(self.segment_queue, util.Message.Message('preprocess signals', 'Frame preprocessed', canny,
-                                                                     'A frame was read and preprocessed'))
+                                                                     'A frame was read and preprocessed',
+                                                                     message.image_id))
 
     def segment(self, message):
         (contours, hierarchy) = cv2.findContours(message.content.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
@@ -40,7 +41,8 @@ class SignalExecutor(AbstractExecutor):
                                         util.Message.Message('segment signals', 'Signal extracted',
                                                              message.content[x - margin:y - margin,
                                                              x + w + margin:y + h + margin],
-                                                             'Possible signal extracted from frame'))
+                                                             'Possible signal extracted from frame',
+                                                             message.image_id + '_' + str(i)))
 
     def identify(self, message):
         threads = []
