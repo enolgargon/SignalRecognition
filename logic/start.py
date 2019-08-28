@@ -1,4 +1,4 @@
-from .SignalExecutor import SignalExecutor
+from logic import SignalExecutor
 
 if __name__ == '__main__':
-    SignalExecutor(['1', '2b', '2bis']).create_threads()
+    SignalExecutor(['1', '2b', '2bis']).create_threads()()

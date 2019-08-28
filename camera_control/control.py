@@ -8,7 +8,7 @@ import proyect_util as util
 
 
 def init():
-    cap = cv2.VideoCapture('../../prueba.MOV')
+    cap = cv2.VideoCapture('../../prueba.mp4')
     queue = posixmq.Queue('/camera_control')
 
     try:

@@ -1,7 +1,7 @@
 import time
 from abc import ABC, abstractmethod
 from queue import Queue
-from threading import Thread
+from threading import Thread, current_thread
 
 from ipcqueue import posixmq
 
@@ -39,27 +39,28 @@ class AbstractExecutor(ABC):
         pass
 
     def __preprocess_and_segment(self):
-        message = self._dequeue(self.camera_queue)
-        if message is not None:
-            self.preprocess(message)
+        while True:
+            message = self._dequeue(self.camera_queue)
+            if message is not None:
+                self.preprocess(message)
 
-        message = self._dequeue(self.segment_queue)
-        if message is not None:
-            self.segment(message)
+            message = self._dequeue(self.segment_queue)
+            if message is not None:
+                self.segment(message)
 
     def _dequeue_identify(self):
-        message = self._dequeue(self.identify_queue)
-        if message is not None:
-            self.identify(message)
+        while True:
+            message = self._dequeue(self.identify_queue)
+            if message is not None:
+                self.identify(message)
 
     def create_threads(self):
-        self.thread1 = Thread(target=self.__preprocess_and_segment,
-                              name=f"{self.__class__.__name__} preprocess and segmentation thread")
+        current_thread().setName(f"{self.__class__.__name__} preprocess and segmentation thread")
         self.thread2 = Thread(target=self._dequeue_identify,
                               name=f"{self.__class__.__name__} identification first thread")
         self.thread3 = Thread(target=self._dequeue_identify,
                               name=f"{self.__class__.__name__} identification second thread")
 
-        self.thread1.start()
         self.thread2.start()
         self.thread3.start()
+        return self.__preprocess_and_segment
