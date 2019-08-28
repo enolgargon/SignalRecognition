@@ -5,6 +5,8 @@ from threading import Thread, current_thread
 
 from ipcqueue import posixmq
 
+from proyect_util import get
+
 
 class AbstractExecutor(ABC):
     def __init__(self):
@@ -15,9 +17,10 @@ class AbstractExecutor(ABC):
         self.thread2 = None
         self.thread3 = None
 
-    def _dequeue(self, queue):
+    @staticmethod
+    def _dequeue(queue):
         if queue.qsize() > 0:
-            message = queue.get()
+            message = get(queue)
             if message is None:
                 time.sleep(.2)
             else:

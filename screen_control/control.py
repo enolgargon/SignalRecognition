@@ -2,6 +2,8 @@ import time
 
 from ipcqueue import posixmq
 
+from proyect_util import get
+
 
 def init():
     queue = posixmq.Queue('/signals')
@@ -10,7 +12,7 @@ def init():
         if queue.qsize() == 0:
             time.sleep(.2)
         else:
-            message = queue.get()
+            message = get(queue)
             print(message)
 
 
