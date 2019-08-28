@@ -20,7 +20,7 @@ def init():
             else:
                 util.put(queue, util.Message('control_camera', 'New frame', frame, 'New frame has '
                                                                                    'been read',
-                                             datetime.now().strftime('%Y%m%d%H%M%S')))
+                                             datetime.now().strftime('%Y%m%d%H%M%S%f')))
                 time.sleep(.5)
     finally:
         cap.release()
