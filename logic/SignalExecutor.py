@@ -27,7 +27,7 @@ class SignalExecutor(AbstractExecutor):
         color = cv2.cvtColor(message.content, cv2.COLOR_BGR2LAB)
         gauss = cv2.GaussianBlur(color, (9, 9), 0)
         canny = cv2.Canny(gauss, 10, 250)
-        util.put(self.segment_queue, util.Message('preprocess signals', 'Frame preprocessed', canny,
+        util.put(self.segment_queue, util.Message('logic_signal', 'Frame preprocessed', canny,
                                                   'A frame was read and preprocessed',
                                                   message.image_id))
 
@@ -42,7 +42,7 @@ class SignalExecutor(AbstractExecutor):
                 x, y, w, h = cv2.boundingRect(c)
                 if abs(w - h) < 10:
                     util.put(self.identify_queue,
-                             util.Message('segment signals', 'Signal extracted',
+                             util.Message('logic_signal', 'Signal extracted',
                                           message.content[x - margin:y - margin,
                                           x + w + margin:y + h + margin],
                                           'Possible signal extracted from frame',
@@ -65,7 +65,7 @@ class SignalExecutor(AbstractExecutor):
 
         signal = stats.mode(result)
         if result.count(signal) > len(result) / 2:
-            util.put(self.exit_queue, util.Message('signal identificator', 'Identify new signal', signal,
+            util.put(self.exit_queue, util.Message('logic_signal', 'Identify new signal', signal,
                                                    f"The threads give the result {str(result)}"
                                                    f" so the signal with code {signal} has been recognized. "
                                                    f"This signal has described as {Identificator.codification[signal]}",

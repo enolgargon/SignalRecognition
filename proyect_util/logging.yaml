@@ -39,7 +39,7 @@ handlers:
     encoding: utf8
 
 loggers:
-  camera_control:
+  control_camera:
     level: ALL
     handlers: [camera_file_handler]
     propagate: no
@@ -49,7 +49,7 @@ loggers:
     handlers: [signal_file_handler]
     propagate: no
 
-  screen_control:
+  control_screen:
     level: ALL
     handlers: [screen_file_handler]
     propagate: no
