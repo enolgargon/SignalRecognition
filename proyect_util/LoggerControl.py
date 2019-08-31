@@ -13,6 +13,7 @@ class LoggerControl:
 
     def __init__(self):
         self.loggers = {}
+        self.setup_logging()
 
     def get_logger(self, logger_name):
         if logger_name not in self.loggers.keys():
@@ -20,13 +21,11 @@ class LoggerControl:
         return self.loggers[logger_name]
 
     @staticmethod
-    def setup_logging(path='logging.yaml', default_level=logging.INFO, env_key='LOG_CFG'):
-        value = os.getenv(env_key, None)
-        if value:
-            path = value
+    def setup_logging(path='../logs/logging.yaml', default_level=logging.INFO):
         if os.path.exists(path):
             with open(path, 'rt') as f:
                 config = yaml.safe_load(f.read())
             logging.config.dictConfig(config)
         else:
+            logging.error('Logging configuration fails to load')
             logging.basicConfig(level=default_level)
