@@ -5,7 +5,7 @@ from threading import Thread, current_thread
 
 from ipcqueue import posixmq
 
-from proyect_util import get
+from proyect_util import get, LoggerControl
 
 
 class AbstractExecutor(ABC):
@@ -58,12 +58,21 @@ class AbstractExecutor(ABC):
                 self.identify(message)
 
     def create_threads(self):
+        LoggerControl().get_logger('logic_signal').info('Creating threads to signal identification')
+
         current_thread().setName(f"{self.__class__.__name__} preprocess and segmentation thread")
+        LoggerControl().get_logger('logic_signal').info(
+            'Configuring main thread to execute preprocess and segmentation tasks')
+
         self.thread2 = Thread(target=self._dequeue_identify,
                               name=f"{self.__class__.__name__} identification first thread")
+        LoggerControl().get_logger('logic_signal').info('Created first thread for identification')
+
         self.thread3 = Thread(target=self._dequeue_identify,
                               name=f"{self.__class__.__name__} identification second thread")
+        LoggerControl().get_logger('logic_signal').info('Created second thread for identification')
 
         self.thread2.start()
         self.thread3.start()
+        LoggerControl().get_logger('logic_signal').info('Identification threads has been started')
         return self.__preprocess_and_segment
