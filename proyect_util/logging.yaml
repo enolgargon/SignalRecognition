@@ -1,0 +1,59 @@
+version: 1
+disable_existing_loggers: False
+formatters:
+  simple:
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: simple
+    stream: ext://sys.stdout
+
+  camera_file_handler:
+    class: logging.handlers.RotatingFileHandler
+    level: ALL
+    formatter: simple
+    filename: camera.log
+    maxBytes: 10485760 # 10MB
+    backupCount: 20
+    encoding: utf8
+
+  signal_file_handler:
+    class: logging.handlers.RotatingFileHandler
+    level: ALL
+    formatter: simple
+    filename: signal.log
+    maxBytes: 10485760 # 10MB
+    backupCount: 20
+    encoding: utf8
+
+  screen_file_handler:
+    class: logging.handlers.RotatingFileHandler
+    level: ALL
+    formatter: simple
+    filename: screen.log
+    maxBytes: 10485760 # 10MB
+    backupCount: 20
+    encoding: utf8
+
+loggers:
+  camera_control:
+    level: ALL
+    handlers: [camera_file_handler]
+    propagate: no
+
+  logic_signal:
+    level: ALL
+    handlers: [signal_file_handler]
+    propagate: no
+
+  screen_control:
+    level: ALL
+    handlers: [screen_file_handler]
+    propagate: no
+
+root:
+  level: INFO
+  handlers: [console, info_file_handler, error_file_handler]
