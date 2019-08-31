@@ -5,7 +5,7 @@ from threading import Thread, current_thread
 
 from ipcqueue import posixmq
 
-from proyect_util import get, LoggerControl
+from project_util import get, LoggerControl
 
 
 class AbstractExecutor(ABC):

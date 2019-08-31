@@ -3,7 +3,7 @@ import time
 from ipcqueue import posixmq
 
 from logic import Identificator
-from proyect_util import get, LoggerControl
+from project_util import get, LoggerControl
 
 
 def init():

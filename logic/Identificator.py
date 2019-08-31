@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from tensorflow.python.keras.models import load_model
 
-from proyect_util import LoggerControl
+from project_util import LoggerControl
 
 
 class Identificator:

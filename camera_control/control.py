@@ -4,7 +4,7 @@ from datetime import datetime
 import cv2
 from ipcqueue import posixmq
 
-import proyect_util as util
+import project_util as util
 
 
 def init():

@@ -4,7 +4,7 @@ from threading import Thread
 import cv2
 from ipcqueue import posixmq
 
-import proyect_util as util
+import project_util as util
 from .AbstractExecutor import AbstractExecutor
 from .Identificator import Identificator
 
