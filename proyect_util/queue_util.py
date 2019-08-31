@@ -1,8 +1,10 @@
+from .LoggerControl import LoggerControl
 from .Message import Message
 
 
 def put(queue, element):
-    # log message
+    LoggerControl().get_logger(element.sender).info(
+        f"New element in queue {queue} : [{element.title}] {element.description}")
     queue.put(element.to_json())
 
 
