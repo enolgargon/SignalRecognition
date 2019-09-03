@@ -38,12 +38,13 @@ class SignalExecutor(AbstractExecutor):
 
         util.put(self.segment_queue, util.Message('logic_signal', 'Frame preprocessed', canny,
                                                   'A frame was read and preprocessed',
-                                                  message.image_id))
+                                                  message.image_id), 'segment_queue')
 
     def segment(self, message):
         util.LoggerControl().get_logger('logic_signal').info('Segment of ' + message.image_id + ' has started')
 
-        (contours, hierarchy) = cv2.findContours(message.content.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+        (contours, hierarchy) = cv2.findContours(cv2.cvtColor(message.content, cv2.COLOR_BGR2GRAY), cv2.RETR_CCOMP,
+                                                 cv2.CHAIN_APPROX_SIMPLE)
         hierarchy = hierarchy[0]
         util.LoggerControl().get_logger('logic_signal').debug(
             str(len(contours)) + ' contours found in image ' + message.image_id)
@@ -59,7 +60,7 @@ class SignalExecutor(AbstractExecutor):
                                           message.content[x - margin:y - margin,
                                           x + w + margin:y + h + margin],
                                           'Possible signal extracted from frame',
-                                          message.image_id + '_' + str(i)))
+                                          message.image_id + '_' + str(i)), 'identify_queue')
 
     def identify(self, message):
         util.LoggerControl().get_logger('logic_signal').info('Starting identification of image ' + message.image_id)
@@ -89,4 +90,4 @@ class SignalExecutor(AbstractExecutor):
                                                    f"The threads give the result {str(result)}"
                                                    f" so the signal with code {signal} has been recognized. "
                                                    f"This signal has described as {Identificator.codification[signal]}",
-                                                   message.image_id))
+                                                   message.image_id), 'signals_queue')

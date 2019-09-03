@@ -25,7 +25,7 @@ def init():
             else:
                 util.put(queue, util.Message('control_camera', 'New frame', frame, 'New frame has '
                                                                                    'been read',
-                                             datetime.now().strftime('%Y%m%d%H%M%S%f')))
+                                             datetime.now().strftime('%Y%m%d%H%M%S%f')), 'camera_control')
                 time.sleep(.5)
     except:
         util.LoggerControl().get_logger('control_camera').error('Un handler error', exc_info=True)

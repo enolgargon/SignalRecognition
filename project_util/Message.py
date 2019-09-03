@@ -4,6 +4,8 @@ import cv2
 
 
 class Message:
+    base_image_route = '../../images/'
+
     def __init__(self, sender, title, content, description, image_id):
         self.sender = sender
         self.title = title
@@ -26,8 +28,5 @@ class Message:
     @staticmethod
     def from_json(json_content):
         data = json.loads(json_content)
-        return Message(data.sender, data.title, cv2.imread(Message.base_image_route + data.image_id), data.description,
-                       data.image_id)
-
-
-Message.base_image_route = '../../images/'
+        return Message(data['sender'], data['title'], cv2.imread(Message.base_image_route + data['image_id'] + '.png'),
+                       data['description'], data['image_id'])
