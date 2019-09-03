@@ -38,7 +38,7 @@ class SignalExecutor(AbstractExecutor):
 
         util.put(self.segment_queue, util.Message('logic_signal', 'Frame preprocessed', canny,
                                                   'A frame was read and preprocessed',
-                                                  message.image_id), 'segment_queue')
+                                                  message.image_id + 'p'), 'segment_queue')
 
     def segment(self, message):
         util.LoggerControl().get_logger('logic_signal').info('Segment of ' + message.image_id + ' has started')
@@ -57,8 +57,8 @@ class SignalExecutor(AbstractExecutor):
                 if abs(w - h) < 10:
                     util.put(self.identify_queue,
                              util.Message('logic_signal', 'Signal extracted',
-                                          message.content[x - margin:y - margin,
-                                          x + w + margin:y + h + margin],
+                                          cv2.imread(util.Message.base_image_route + message.image_id[:-1:] + '.png')[
+                                          x - margin:y - margin, x + w + margin:y + h + margin],
                                           'Possible signal extracted from frame',
                                           message.image_id + '_' + str(i)), 'identify_queue')
 
