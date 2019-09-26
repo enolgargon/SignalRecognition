@@ -51,7 +51,7 @@ class SignalExecutor(AbstractExecutor):
 
         margin = 10
         for i in range(len(contours)):
-            if hierarchy[i][2] >= 0 and hierarchy[i][3] >= 0:
+            if hierarchy[i][2] >= 0 or hierarchy[i][3] >= 0:
                 c = contours[i]
                 x, y, w, h = cv2.boundingRect(c)
                 if abs(w - h) < 10:
@@ -85,6 +85,7 @@ class SignalExecutor(AbstractExecutor):
             result += [identificator.result]
 
         signal = stats.mode(result)
+        print(signal)
         if result.count(signal) > len(result) / 2:
             util.put(self.exit_queue, util.Message('logic_signal', 'Identify new signal', signal,
                                                    f"The threads give the result {str(result)}"

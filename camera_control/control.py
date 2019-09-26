@@ -23,8 +23,8 @@ def init():
                 util.LoggerControl().get_logger('control_camera').error('Error while new frame was reading')
                 pass
             else:
-                util.put(queue, util.Message('control_camera', 'New frame', frame, 'New frame has '
-                                                                                   'been read',
+                util.put(queue, util.Message('control_camera', 'New frame', cv2.resize(frame, (0, 0), fx=0.5, fy=0.5),
+                                             'New frame has been read',
                                              datetime.now().strftime('%Y%m%d%H%M%S%f')), 'camera_control')
                 time.sleep(.5)
     except:
