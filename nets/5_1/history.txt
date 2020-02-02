@@ -1,0 +1,10 @@
+Fecha: 2019-10-05 14:07:56.236748
+Creada la red
+
+--------------------------------------------------------------------------------
+Fecha: 2019-10-06 17:09:08.166744
+Entrenamiento k fold con los siguientes datos:
+	epoch: 5
+	batch_size: 32
+	pasos: 700
+	validation_steps: 400

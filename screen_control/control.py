@@ -16,7 +16,9 @@ def init():
         if queue.qsize() == 0:
             time.sleep(.2)
         else:
+            print("A ver")
             message = get(queue)
+            print(message)
             LoggerControl().get_logger('control_screen').info('New signal: ' +
                                                               Identificator.codification[message.content])
 

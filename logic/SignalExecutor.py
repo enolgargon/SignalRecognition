@@ -15,10 +15,10 @@ class SignalExecutor(AbstractExecutor):
         self.exit_queue = posixmq.Queue('/signals')
 
         self.identificators = []
-        if type(nets) == 'array':
+        if type(nets) == type([]):
             for net in nets:
                 self.identificators += [Identificator(net)]
-        elif type(nets) == 'string':
+        elif type(nets) == type('string'):
             self.identificators += [Identificator(nets)]
         else:
             TypeError('The constructor param must be of type array or string')
@@ -42,9 +42,9 @@ class SignalExecutor(AbstractExecutor):
 
     def segment(self, message):
         util.LoggerControl().get_logger('logic_signal').info('Segment of ' + message.image_id + ' has started')
-
-        (contours, hierarchy) = cv2.findContours(cv2.cvtColor(message.content, cv2.COLOR_BGR2GRAY), cv2.RETR_CCOMP,
+        (contours, hierarchy) = cv2.findContours(cv2.cvtColor(message.content, cv2.COLOR_BGRA2GRAY), cv2.RETR_CCOMP,
                                                  cv2.CHAIN_APPROX_SIMPLE)
+
         hierarchy = hierarchy[0]
         util.LoggerControl().get_logger('logic_signal').debug(
             str(len(contours)) + ' contours found in image ' + message.image_id)
@@ -54,20 +54,22 @@ class SignalExecutor(AbstractExecutor):
             if hierarchy[i][2] >= 0 or hierarchy[i][3] >= 0:
                 c = contours[i]
                 x, y, w, h = cv2.boundingRect(c)
-                if abs(w - h) < 10:
+                if abs(w - h) < 10 and w > 10:
                     util.put(self.identify_queue,
                              util.Message('logic_signal', 'Signal extracted',
-                                          cv2.imread(util.Message.base_image_route + message.image_id[:-1:] + '.png')[
+                                          cv2.imread(util.Message.base_image_route + message.image_id[:-1] + '.png')[
                                           x - margin:y - margin, x + w + margin:y + h + margin],
                                           'Possible signal extracted from frame',
                                           message.image_id + '_' + str(i)), 'identify_queue')
 
     def identify(self, message):
+        if message.content is None:
+            return
         util.LoggerControl().get_logger('logic_signal').info('Starting identification of image ' + message.image_id)
 
         threads = []
         for identificator in self.identificators:
-            thread = Thread(target=identificator.net, args=(message.content,),
+            thread = Thread(target=identificator.evaluate, args=(message.content,),
                             name=f"Identificator of net {identificator.net_name}")
             threads += [thread]
             thread.start()
@@ -84,8 +86,8 @@ class SignalExecutor(AbstractExecutor):
         for identificator in self.identificators:
             result += [identificator.result]
 
+        print(result)
         signal = stats.mode(result)
-        print(signal)
         if result.count(signal) > len(result) / 2:
             util.put(self.exit_queue, util.Message('logic_signal', 'Identify new signal', signal,
                                                    f"The threads give the result {str(result)}"
