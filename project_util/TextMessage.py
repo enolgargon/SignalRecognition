@@ -1,11 +1,7 @@
 import json
 
-import cv2
 
-
-class Message:
-    base_image_route = '../../images/'
-
+class TextMessage:
     def __init__(self, sender, title, content, description, image_id):
         self.sender = sender
         self.title = title
@@ -17,11 +13,11 @@ class Message:
         return f'{self.sender} send "{self.description}"'
 
     def to_json(self):
-        if type(self.content) != 'string':
-            cv2.imwrite(Message.base_image_route + self.image_id + '.png', self.content)
+        print("Esto si")
         return json.dumps({
             'sender': self.sender,
             'title': self.title,
+            'content': self.content,
             'description': self.description,
             'image_id': self.image_id
         })
@@ -29,5 +25,5 @@ class Message:
     @staticmethod
     def from_json(json_content):
         data = json.loads(json_content)
-        return Message(data['sender'], data['title'], cv2.imread(Message.base_image_route + data['image_id'] + '.png'),
-                       data['description'], data['image_id'])
+        return TextMessage(data['sender'], data['title'], data['content'], data['description'],
+                           data.get('image_id', ''))

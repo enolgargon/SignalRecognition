@@ -3,7 +3,7 @@ import time
 from ipcqueue import posixmq
 
 from logic import Identificator
-from project_util import get, LoggerControl
+from project_util import getText, LoggerControl
 
 
 def init():
@@ -16,11 +16,10 @@ def init():
         if queue.qsize() == 0:
             time.sleep(.2)
         else:
-            print("A ver")
-            message = get(queue)
+            message = getText(queue)
             print(message)
             LoggerControl().get_logger('control_screen').info('New signal: ' +
-                                                              Identificator.codification[message.content])
+                                                              Identificator.codification[int(message.content)])
 
 
 if __name__ == '__main__':

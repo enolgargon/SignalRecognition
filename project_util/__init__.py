@@ -1,3 +1,4 @@
 from .LoggerControl import LoggerControl
 from .Message import Message
-from .queue_util import put, get
+from .TextMessage import TextMessage
+from .queue_util import put, get, getText

@@ -84,12 +84,13 @@ class SignalExecutor(AbstractExecutor):
 
         result = []
         for identificator in self.identificators:
-            result += [identificator.result]
+            if identificator.result is not None:
+                result += [identificator.result]
 
         print(result)
         signal = stats.mode(result)
-        if result.count(signal) > len(result) / 2:
-            util.put(self.exit_queue, util.Message('logic_signal', 'Identify new signal', signal,
+        if len(result) > 2 and result.count(signal) > len(result) / 2:
+            util.put(self.exit_queue, util.TextMessage('logic_signal', 'Identify new signal', str(signal),
                                                    f"The threads give the result {str(result)}"
                                                    f" so the signal with code {signal} has been recognized. "
                                                    f"This signal has described as {Identificator.codification[signal]}",
