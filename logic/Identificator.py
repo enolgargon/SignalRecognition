@@ -1,10 +1,11 @@
 import cv2
 import numpy as np
-from tensorflow.python.keras.models import load_model
-from tensorflow.python.keras import backend as K
 import tensorflow as tf
+from tensorflow.python.keras import backend as K
+from tensorflow.python.keras.models import load_model
 
 from project_util import LoggerControl
+
 
 class Identificator:
     size = (48, 48)
@@ -66,8 +67,8 @@ class Identificator:
         #self._graph.finalize()
 
     def _load_net(self):
-        model_path = '../nets/' + self.net_name + '/model.h5'
-        weights_path = '../nets/' + self.net_name + '/weights.h5'
+        model_path = './nets/' + self.net_name + '/model.h5'
+        weights_path = './nets/' + self.net_name + '/weights.h5'
 
         self.net = load_model(model_path)
         LoggerControl().get_logger('logic_signal').info('Model of ' + self.net_name + ' was load')

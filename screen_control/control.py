@@ -22,5 +22,4 @@ def init():
                                                               Identificator.codification[int(message.content)])
 
 
-if __name__ == '__main__':
-    init()
+init()
