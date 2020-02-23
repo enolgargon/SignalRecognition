@@ -1,10 +1,11 @@
 import cv2
 import numpy as np
-from tensorflow.python.keras.models import load_model
-from tensorflow.python.keras import backend as K
 import tensorflow as tf
+from tensorflow.python.keras import backend as K
+from tensorflow.python.keras.models import load_model
 
 from project_util import LoggerControl
+
 
 class Identificator:
     size = (48, 48)

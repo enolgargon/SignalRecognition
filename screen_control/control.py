@@ -3,7 +3,7 @@ import time
 from ipcqueue import posixmq
 
 from logic import Identificator
-from project_util import getText, LoggerControl
+from project_util import getText, LoggerControl, register_signal
 
 
 def init():
@@ -18,6 +18,7 @@ def init():
         else:
             message = getText(queue)
             print(message)
+            register_signal(int(message.content))
             LoggerControl().get_logger('control_screen').info('New signal: ' +
                                                               Identificator.codification[int(message.content)])
 

@@ -1,12 +1,24 @@
-from datetime import datetime
+from peewee import IntegerField, CharField, DateTimeField
+
+from .BaseModel import BaseModel
+
+type_to_code = {
+    'prohibition': 0,
+    'speed': 1,
+    'warning': 2,
+    'other': 3
+}
+code_to_type = {
+    0: 'prohibition',
+    1: 'speed',
+    2: 'warning',
+    3: 'other'
+}
 
 
-class Signal:
-    def __init__(self, code, name, appearance_time=datetime.now(), expiration_time=None):
-        self.code = code
-        self.name = name
-        self.appearance_time = appearance_time
-        self.expiration_time = expiration_time
-
-    def is_valid(self, current_time=datetime.now()):
-        return self.expiration_time is None or self.appearance_time < current_time < self.expiration_time
+class Signal(BaseModel):
+    code = IntegerField()
+    name = CharField()
+    appearance_time = DateTimeField()
+    expiration_time = DateTimeField()
+    type = IntegerField()
