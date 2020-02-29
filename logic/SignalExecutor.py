@@ -1,4 +1,4 @@
-import statistics as stats
+from collections import Counter
 from threading import Thread
 
 import cv2
@@ -88,10 +88,10 @@ class SignalExecutor(AbstractExecutor):
                 result += [identificator.result]
 
         print(result)
-        signal = stats.mode(result)
-        if len(result) > 2 and result.count(signal) > len(result) / 2:
-            util.put(self.exit_queue, util.TextMessage('logic_signal', 'Identify new signal', str(signal),
-                                                   f"The threads give the result {str(result)}"
-                                                   f" so the signal with code {signal} has been recognized. "
-                                                   f"This signal has described as {Identificator.codification[signal]}",
-                                                   message.image_id), 'signals_queue')
+        signal = Counter(result).most_common(1)[0]
+        if len(result) > 2 and signal[1] > len(result) / 2:
+            util.put(self.exit_queue, util.TextMessage('logic_signal', 'Identify new signal', str(signal[0]),
+                                                       f"The threads give the result {str(result)}"
+                                                       f" so the signal with code {signal[0]} has been recognized. "
+                                                       f"This signal has described as {util.codification[signal[0]]}",
+                                                       message.image_id), 'signals_queue')

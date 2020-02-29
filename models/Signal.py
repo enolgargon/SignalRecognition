@@ -1,4 +1,4 @@
-from peewee import IntegerField, CharField, DateTimeField
+from peewee import IntegerField, TextField, DateTimeField
 
 from .BaseModel import BaseModel
 
@@ -18,7 +18,7 @@ code_to_type = {
 
 class Signal(BaseModel):
     code = IntegerField()
-    name = CharField()
+    name = TextField()
     appearance_time = DateTimeField()
-    expiration_time = DateTimeField()
+    expiration_time = DateTimeField(null=True)
     type = IntegerField()

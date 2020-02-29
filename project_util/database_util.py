@@ -1,7 +1,6 @@
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, date
 
 import project_util as util
-from logic import Identificator
 from models import database, Signal, type_to_code
 
 
@@ -22,7 +21,7 @@ other_signals_code = [12, 13, 14, 33, 34, 35, 36, 37, 38, 39, 40]
 
 def register_signal(code):
     invalid_signal(code)
-    signal_type = -1
+    signal_type = None
     valid = -1
 
     if code in speed_signals_code:
@@ -37,6 +36,7 @@ def register_signal(code):
         signal_type = 'other'
         valid = 1
     else:
+        print(code)
         signal_type = 'prohibition'
         valid = 0
         switch = {
@@ -48,7 +48,7 @@ def register_signal(code):
         switch.get(code, lambda: util.LoggerControl().get_logger('control_screen')
                    .error(f"Error while register image with code {code}. Code not found"))()
 
-    if signal_type == -1:
+    if not signal_type:
         return
     else:
         signal_type = type_to_code[signal_type]
@@ -57,16 +57,18 @@ def register_signal(code):
         if database.is_closed():
             database.connect()
         with database.atomic():
+            print(valid)
             Signal.create(
                 code=code,
-                name=Identificator.codification[code],
-                appearance_time=datetime.now,
-                expiration_time=None if valid == -1 else datetime.now() + timedelta(minutes=valid),
+                name=util.codification[code],
+                appearance_time=datetime.now(),
+                expiration_time=None if valid == -1 else (datetime.now() + timedelta(minutes=valid)),
                 type=signal_type
             )
         if not database.is_closed():
             database.close()
-    except:
+    except Exception as e:
+        print(e)
         util.LoggerControl().get_logger('control_screen').error(f'Error during the creation of signal with code {code}')
 
 
@@ -97,9 +99,14 @@ def get_current_signals():
     if database.is_closed():
         database.connect()
 
-    signals = Signal.select().where(Signal.expiration_time is None or
-                                    Signal.appearance_time < datetime.now() < Signal.expiration_time)
+    signals = Signal.select().where(
+        Signal.expiration_time.is_null() | (Signal.appearance_time < datetime.now() < Signal.expiration_time))
     if not database.is_closed():
         database.close()
 
-    return signals
+    return list(signals)
+
+
+def datetime_wrapper(o):
+    if isinstance(o, (date, datetime)):
+        return o.isoformat()

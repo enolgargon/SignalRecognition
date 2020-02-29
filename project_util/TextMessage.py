@@ -13,7 +13,6 @@ class TextMessage:
         return f'{self.sender} send "{self.description}"'
 
     def to_json(self):
-        print("Esto si")
         return json.dumps({
             'sender': self.sender,
             'title': self.title,
