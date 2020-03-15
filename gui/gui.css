@@ -1,0 +1,14 @@
+#frame {
+	height: 88vh;
+	margin-bottom: .8em;
+}
+
+#signals {
+	height: 8vh;
+	width: 160vh;
+}
+
+img {
+	height: 100%;
+	margin: 0 .2em
+}

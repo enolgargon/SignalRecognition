@@ -57,12 +57,12 @@ def register_signal(code):
         if database.is_closed():
             database.connect()
         with database.atomic():
-            print(valid)
+            end = None if valid == -1 else (datetime.now() + timedelta(minutes=valid))
             Signal.create(
                 code=code,
                 name=util.codification[code],
                 appearance_time=datetime.now(),
-                expiration_time=None if valid == -1 else (datetime.now() + timedelta(minutes=valid)),
+                expiration_time=end,
                 type=signal_type
             )
         if not database.is_closed():
@@ -76,9 +76,7 @@ def invalid_signal(code):
     if database.is_closed():
         database.connect()
 
-    query = Signal.update(expiration_time=datetime.now()).where(Signal.code == code and
-                                                                (Signal.expiration_time is None or
-                                                                 Signal.appearance_time < datetime.now() < Signal.expiration_time))
+    query = Signal.update(expiration_time=datetime.now()).where(Signal.code == code)
     query.execute()
     if not database.is_closed():
         database.close()
