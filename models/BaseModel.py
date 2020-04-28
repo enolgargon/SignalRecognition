@@ -1,6 +1,6 @@
 from peewee import Model, SqliteDatabase
 
-database = SqliteDatabase('/home/enolgargon/SignalRecognition.db',
+database = SqliteDatabase('/home/ubuntu/SignalRecognition.db',
                           pragmas={'journal_mode': 'wal', ' cache_size': -1024 * 64})
 
 

@@ -11,7 +11,7 @@ import project_util as util
 def init():
     util.LoggerControl().get_logger('control_camera').info('Camera control is initializing...')
 
-    cap = cv2.VideoCapture('../../prueba.mp4')
+    cap = cv2.VideoCapture('/home/ubuntu/prueba.mp4')
     util.LoggerControl().get_logger('control_camera').debug('Video capture initialized')
 
     queue = posixmq.Queue('/camera_control')

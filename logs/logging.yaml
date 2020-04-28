@@ -13,7 +13,7 @@ handlers:
   camera_file_handler:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: ../logs/camera.log
+    filename: /home/ubuntu/SignalRecognition/logs/camera.log
     maxBytes: 10485760 # 10MB
     backupCount: 20
     encoding: utf8
@@ -21,7 +21,7 @@ handlers:
   signal_file_handler:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: ../logs/signal.log
+    filename: /home/ubuntu/SignalRecognition/logs/signal.log
     maxBytes: 10485760 # 10MB
     backupCount: 20
     encoding: utf8
@@ -29,7 +29,7 @@ handlers:
   screen_file_handler:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: ../logs/screen.log
+    filename: /home/ubuntu/SignalRecognition/logs/screen.log
     maxBytes: 10485760 # 10MB
     backupCount: 20
     encoding: utf8
