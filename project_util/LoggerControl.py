@@ -21,7 +21,7 @@ class LoggerControl:
         return self.loggers[logger_name]
 
     @staticmethod
-    def setup_logging(path='/home/ubuntu/SignalRecognition/logs/logging.yaml', default_level=logging.INFO):
+    def setup_logging(path='/home/pi/SignalRecognition/logs/logging.yaml', default_level=logging.INFO):
         if os.path.exists(path):
             with open(path, 'rt') as f:
                 config = yaml.safe_load(f.read())
