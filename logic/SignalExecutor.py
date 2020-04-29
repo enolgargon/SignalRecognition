@@ -14,6 +14,7 @@ class SignalExecutor(AbstractExecutor):
         super().__init__()
         self.exit_queue = posixmq.Queue('/signals')
 
+        self.filter = Identificator('filter2')
         self.identificators = []
         if type(nets) == type([]):
             for net in nets:
@@ -26,11 +27,14 @@ class SignalExecutor(AbstractExecutor):
     def preprocess(self, message):
         util.LoggerControl().get_logger('logic_signal').info('Preprocess of ' + message.image_id + ' has started')
 
+        if message.content is None:
+            return
+
         color = cv2.cvtColor(message.content, cv2.COLOR_BGR2LAB)
         util.LoggerControl().get_logger('logic_signal').debug(
             'Applied ctv color transform to image ' + message.image_id)
 
-        gauss = cv2.GaussianBlur(color, (9, 9), 0)
+        gauss = cv2.GaussianBlur(color, (5, 5), 0)
         util.LoggerControl().get_logger('logic_signal').debug('Applied gaussian transform to image ' + message.image_id)
 
         canny = cv2.Canny(gauss, 10, 250)
@@ -51,22 +55,34 @@ class SignalExecutor(AbstractExecutor):
 
         margin = 10
         for i in range(len(contours)):
-            if hierarchy[i][2] >= 0 or hierarchy[i][3] >= 0:
-                c = contours[i]
-                x, y, w, h = cv2.boundingRect(c)
-                if abs(w - h) < 10 and w > 10:
-                    util.put(self.identify_queue,
-                             util.Message('logic_signal', 'Signal extracted',
-                                          cv2.imread(util.Message.base_image_route + message.image_id[:-1] + '.png')[
-                                          x - margin:y - margin, x + w + margin:y + h + margin],
-                                          'Possible signal extracted from frame',
-                                          message.image_id + '_' + str(i)), 'identify_queue')
+            # if hierarchy[i][2] >= 0 or hierarchy[i][3] >= 0:
+            c = contours[i]
+            x, y, w, h = cv2.boundingRect(c)
+            if abs(w - h) < 10 and w > 10:
+                util.put(self.identify_queue,
+                         util.Message('logic_signal', 'Signal extracted',
+                                      cv2.imread(util.Message.base_image_route + message.image_id[:-1] + '.png')[
+                                      y - margin:y + h + margin, x - margin:x + w + margin],
+                                      'Possible signal extracted from frame',
+                                      message.image_id + '_' + str(i)), 'identify_queue')
 
     def identify(self, message):
         if message.content is None:
             return
         util.LoggerControl().get_logger('logic_signal').info('Starting identification of image ' + message.image_id)
 
+        try:
+            self.filter.evaluate(message.content)
+            if self.filter.result == 1:
+                util.LoggerControl().get_logger('logic_signal').info(
+                    'Filtered image which not contain a signal: ' + message.image_id)
+                return
+        except Exception as e:
+            print(e)
+            util.LoggerControl().get_logger('logic_signal').info('Exception during filter of ' + message.image_id)
+            return
+
+        util.LoggerControl().get_logger('logic_signal').info('Starting classification of signal ' + message.image_id)
         threads = []
         for identificator in self.identificators:
             thread = Thread(target=identificator.evaluate, args=(message.content,),

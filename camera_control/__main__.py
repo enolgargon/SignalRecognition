@@ -28,7 +28,10 @@ def init():
                 util.put(queue, util.Message('control_camera', 'New frame', cv2.resize(frame, (0, 0), fx=0.5, fy=0.5),
                                              'New frame has been read',
                                              name), 'camera_control')
-                requests.post('http://127.0.0.1:5000/current-frame', data={'frame': name})
+                try:
+                    requests.post('http://127.0.0.1:5000/current-frame', data={'frame': name})
+                except:
+                    pass
                 time.sleep(.5)
     except:
         util.LoggerControl().get_logger('control_camera').error('Un handler error', exc_info=True)
