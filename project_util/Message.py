@@ -4,7 +4,7 @@ import cv2
 
 
 class Message:
-    base_image_route = '/home/ubuntu/images/'
+    base_image_route = '/home/recognition/images/'
 
     def __init__(self, sender, title, content, description, image_id):
         self.sender = sender

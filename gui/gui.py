@@ -53,7 +53,7 @@ class App(Frame):
         size = int(.1 * height)
         for i in range(len(self.images)):
             self.loaded_images += [ImageTk.PhotoImage(
-                Image.open(f'/home/enolgargon/icon/{self.images[i]:02d}.png').resize((size, size),
+                Image.open(f'/home/recognition/SignalRecognition/install/icon/{self.images[i]:02d}.png').resize((size, size),
                                                                                      Image.ANTIALIAS))]
             self.lbl_images += [Label(self.bottom_frame, image=self.loaded_images[i])]
             self.lbl_images[i].grid(row=0, column=i, padx=1, pady=1)
@@ -76,7 +76,7 @@ class App(Frame):
                 if frame is None or frame == 'None':
                     frame = ''
                 else:
-                    frame = f"/home/enolgargon/images/{frame}.png"
+                    frame = f"/home/recognition/images/{frame}.png"
             return signals, frame
         except Exception as e:
             print(f"Error request gui: {e}")

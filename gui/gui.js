@@ -1,5 +1,5 @@
 var frame = null;
-var images = null;
+var images = [];
 
 var update = () => {
 	$.ajax({
@@ -8,7 +8,7 @@ var update = () => {
 		dataType: 'json',
 		crossDomain: true,
 		success: data => {
-			$("#frame").attr('src', `file:///home/enolgargon/images/${data.frame}.png`)
+			$("#frame").attr('src', `file:///home/recognition/images/${data.frame}.png`)
 		}
 	});
 
@@ -19,7 +19,7 @@ var update = () => {
 		crossDomain: true,
 		success: data => {
 			$("#signals").empty();
-			data.forEach(element => $("#signals").append(`<img src="file:///home/enolgargon/icon/${element.code.toString().padStart(2, 0)}.png" />`))
+			data.forEach(element => $("#signals").append(`<img src="file:///home/recognition/SignalRecognition/install/icon/${element.code.toString().padStart(2, 0)}.png" />`))
 		}
 	});
 };

@@ -5,7 +5,8 @@ from .TextMessage import TextMessage
 def put(queue, element, queue_name='Unknown'):
     LoggerControl().get_logger(element.sender).info(
         f"New element in queue {queue_name} : [{element.title}] {element.description}")
-    queue.put(element.to_json())
+    element.to_json()
+    #queue.put(element.to_json())
 
 
 def get(queue):
